@@ -1,0 +1,6 @@
+# 数据与模型不入库
+data/
+*.pt
+runs/
+__pycache__/
+.idea/
