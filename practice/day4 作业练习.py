@@ -1,0 +1,126 @@
+# Day 4 练习:if 判断语句
+# 对应视频:BV1qW4y1a7fU 的 p29~p37
+# 规则:先自己写 15 分钟,写不出来再看文件最底部的参考答案(别一上来就翻!)
+
+# ---------- 今天的新东西(看视频前先扫一眼,有个印象就行) ----------
+# 比较运算符:== 等于   != 不等于   > 大于   < 小于   >= 大于等于   <= 小于等于
+#   ⚠️ 单等号 = 是赋值(存东西),双等号 == 是判断(问相等吗),别混
+# 逻辑运算符:and(而且) or(或者) not(不是)
+# 多分支:if / elif / else —— 从上往下判断,命中即停(FizzBuzz 里你用过)
+#   铁律:越特殊的条件越要写在前面
+# 嵌套:条件里面还能再放条件,靠【再缩进 4 格】表示层级
+
+# ---------------- 任务 1:成绩等级 ----------------
+# 用 input() 输入一个分数(0~100 的整数),按规则打印等级:
+#   90 分及以上 → A
+#   80~89      → B
+#   70~79      → C
+#   60~69      → D
+#   60 分以下  → F
+# 输出形如: 85 分 → 等级 B
+# 提示:
+#   分数要 int(input("...")) 转换
+#   elif 的顺序从高到低写,这样后面每个条件都不用再判断上限:
+#     if score >= 90: ...
+#     elif score >= 80: ...   ← 能走到这里,说明上面那条不成立,已自动小于 90
+
+print("mission 1:")
+score=int(input("what is your score?"))
+if score>=90:
+    rank="A"
+elif score>=80:
+    rank="B"
+elif score>=70:
+    rank="C"
+elif score>=60:
+    rank="D";
+else:
+    rank="F";
+print(f"分数{score}➡等级{rank}")
+print()
+
+# ---------------- 任务 2:闰年判断 ----------------
+# 输入一个年份,打印 "2024 是闰年" 或 "2023 不是闰年"
+# 闰年规则(满足任意一条就是闰年):
+#   ① 能被 4 整除,但不能被 100 整除
+#   ② 能被 400 整除
+# 提示:
+#   被整除 → year % 4 == 0
+#   "而且" → and    "或者" → or    "不等于" → !=
+#   可以写成一整行:
+#     if (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0):
+#   括号不是必须的,但加上更清楚
+#   自己准备两个测试值:2024(闰年)、2023(不是),再看看 1900 和 2000 谁对
+
+print("mission 2:")
+year=int(input("which year?"))
+if (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0):
+    print(f"{year} is leap year")
+else:
+    print(f"{year} is not leap year")
+print()
+
+# ---------------- 任务 3:登录校验 ----------------
+# 程序里事先存好正确的账号密码(照抄这两行):
+#     USER = "admin"
+#     PASSWORD = "123456"
+# 用 input() 让用户输入账号和密码,然后按情况打印:
+#   账号密码都对   → 登录成功
+#   账号对密码错   → 密码错误
+#   账号不存在     → 账号不存在
+# 提示:
+#   字符串比较也用 ==
+#   这一题要练【嵌套】——先判断账号,再在里面判断密码:
+#     if name == USER:
+#         if pwd == PASSWORD:
+#             ...
+#         else:
+#             ...
+#     else:
+#         ...
+#   ⚠️ 嵌套的那一层要再往里缩 4 个空格,层级全靠缩进表示
+#   USER / PASSWORD 故意用大写:Python 惯例,大写表示"这是个常量,不该被改"
+
+print("mission 3:")
+USER = "admin"
+PASSWORD = "123456"
+name=input("account info: ")
+passward=input("password info: ")
+if name==USER:
+    if passward==PASSWORD:
+        print(f"login successful")
+    else:
+        print(f"error")
+else:
+    print(f"invalid username or password")
+print()
+
+
+# ---------------- 任务 4(挑战):三角形判定 ----------------
+# 输入三条边长 a、b、c(可以有小数),判断两件事:
+#   ① 能不能构成三角形?  规则:任意两边之和必须大于第三边
+#   ② 如果能,是什么三角形?
+#        三边都相等   → 等边三角形
+#        只有两边相等 → 等腰三角形
+#        三边都不等   → 普通三角形
+# 输出形如: 3.0 4.0 5.0 → 可以构成三角形,是普通三角形
+# 提示:
+#   能不能构成,要用 and 串三个条件一起判断:
+#     if a + b > c and a + c > b and b + c > a:
+#   外层先判断"能不能构成";不能就直接 else 打印不能构成
+#   能构成的话,在外层 if 里面再嵌套一套 if/elif/else 判断类型
+#   这题是今天所有知识点的合体:比较 + and/or + 嵌套 + 多分支
+
+print("mission 4:")
+a=float(input("what is a?"))
+b=float(input("what is b?"))
+c=float(input("what is c?"))
+if a + b > c and a + c > b and b + c > a:
+    if a==b and b==c:
+        print(f"由这三边{a}{b}{c}组成的是等边三角形")
+    elif a==b or a==c or b==c:
+        print(f"由这三边{a}{b}{c}组成的是等腰三角形")
+    else:
+        print(f"由这三边{a}{b}{c}组成的是普通三角形")
+else:
+    print(f"由这三边{a}{b}{c}组成的不是三角形")
