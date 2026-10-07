@@ -60,6 +60,7 @@ text = "yolo detect defect defect steel yolo steel steel model detect yolo"
 
 # 任务 3:
 print("mission 3：")
+text = "yolo detect defect defect steel yolo steel steel model detect yolo"
 counts = {}
 for word in text.split():
 #text.split() 把句子按空格切成单词列表：
