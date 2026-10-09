@@ -4,3 +4,5 @@ data/
 runs/
 __pycache__/
 .idea/
+
+practice/out/
