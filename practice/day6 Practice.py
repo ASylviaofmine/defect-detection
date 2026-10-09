@@ -48,6 +48,10 @@
 # (也就是 ...\defect_detection\),所以下面这个路径能用。
 # 如果报 FileNotFoundError,先怀疑路径 —— 任务 3 就是专门练这个的。
 
+
+
+
+
 # ---------------- 任务 1:写入和读取 txt      ★★ 推荐 ----------------
 # ① 用 "w" 模式,把下面三行写进 practice/demo_data/my_first_file.txt
 #       第一行:我在学 Python 文件读写
@@ -65,6 +69,25 @@
 #      (practice/demo_data 这个文件夹我已经建好了)
 
 print("Mission 1:")
+import os
+print("我现在站在:", os.getcwd())
+path="practice/demo_data/my_first_file.txt"
+f = open(path, "w", encoding="utf-8")
+f.write("我在学 Python 文件读写\n")
+f.write("这是第 6 天\n")
+f.write("今天天气不错\n")
+f.close()
+
+f = open(path, "r", encoding="utf-8")
+content=f.read()
+f.close()
+print(f"{content}")
+
+with open(path, "r", encoding="utf-8") as f:
+    lines = f.readlines()
+print(lines)
+print("行数:", len(lines))
+print()
 
 
 # ---------------- 任务 2:读真实格式的标注文件(项目彩排)   ★★★ 必做 ----------------
@@ -88,6 +111,35 @@ print("Mission 1:")
 #   统计字典那套直接抄 day5 的 mission 4 就行,一模一样
 
 print("Mission 2:")
+path="practice/demo_data/labels_demo.txt"
+counts={}
+total_lines = 0
+f=open(path, "r", encoding="utf-8")
+for line in f:
+    parts = line.strip().split()
+    if not parts:
+        continue
+    name=parts[0]
+    total_lines+=1
+    if name in counts:
+        counts[name]+=1
+    else:
+        counts[name]=1
+f.close()
+
+print(f"缺陷总数：{total_lines}")
+print(f"缺陷总数：{counts}")
+for name,n in counts.items():
+    print(f"{name}出现{n}次")
+print()
+
+most_name=None
+most_n=0
+for name,n in counts.items():
+    if n>most_n:
+        most_name=name
+        most_n=n
+print(f"{most_name}出现次数最多，有{most_n}次")
 
 
 # ---------------- 任务 3:异常处理(出错也不崩)   ★★ 推荐 ----------------
@@ -107,6 +159,16 @@ print("Mission 2:")
 #      实际项目里要在 except 里 print 出来,不然出了问题你都不知道
 
 print("Mission 3:")
+
+try:
+    path = "practice/demo_data/no_such_file.txt"
+    f = open(path, "r", encoding="utf-8")
+    f.close()
+    print(f"{f}")
+except FileNotFoundError:
+    print("文件没找到,请检查路径")
+print("程序继续运行,没有崩溃")
+print()
 
 
 # ---------------- 任务 4:自己写一个模块         ★★★ 必做 ----------------
@@ -129,6 +191,12 @@ print("Mission 3:")
 #      但如果你在外面也定义了 counts,函数里那个是另一个(这叫"作用域")
 
 print("Mission 4:")
+import day06_my_tools
+n = day06_my_tools.count_lines("practice/demo_data/labels_demo.txt")
+print("行数(缺陷总数):", n)
+result = day06_my_tools.count_classes("practice/demo_data/labels_demo.txt")
+print(result)
+print()
 
 
 # ---------------- 加餐(时间够再做,不够就跳) ----------------
@@ -155,142 +223,3 @@ print("Mission 4:")
 #       result[img][cls] += 1     # 两层方括号:先按图名找,再按类别找
 #   为什么这个结构重要:真实数据集就是"图 → 这张图上有哪些缺陷"的嵌套关系,
 #   以后统计"平均每张图几个缺陷""哪张图最脏"全靠它。
-
-print("加餐:")
-
-
-# ==============================================================
-# 参考答案(先自己做!至少挣扎 15 分钟再看)
-# ==============================================================
-#
-# # ---- 任务 1 ----
-# path = "practice/demo_data/my_first_file.txt"
-#
-# f = open(path, "w", encoding="utf-8")
-# f.write("我在学 Python 文件读写\n")
-# f.write("这是第 6 天\n")
-# f.write("今天天气不错\n")
-# f.close()
-#
-# f = open(path, "r", encoding="utf-8")
-# content = f.read()
-# f.close()
-# print(content)
-#
-# with open(path, "r", encoding="utf-8") as f:      # 推荐写法
-#     lines = f.readlines()
-# print(lines)
-# print("行数:", len(lines))
-#
-# # ---- 任务 2 ----
-# path = "practice/demo_data/labels_demo.txt"
-# counts = {}
-# total_lines = 0
-# with open(path, "r", encoding="utf-8") as f:
-#     for line in f:
-#         parts = line.strip().split()      # strip 去掉行尾 \n 再按空格切
-#         if not parts:                     # 空行就跳过,防止 IndexError
-#             continue
-#         name = parts[0]
-#         total_lines = total_lines + 1
-#         if name in counts:
-#             counts[name] += 1
-#         else:
-#             counts[name] = 1
-#
-# print("缺陷总数:", total_lines)
-# for name, n in counts.items():
-#     print(f"{name} 出现 {n} 次")
-#
-# most_name = None
-# most_n = 0
-# for name, n in counts.items():
-#     if n > most_n:
-#         most_name = name
-#         most_n = n
-# print(f"出现最多的是 {most_name}，共 {most_n} 次")
-# # 期望结果:缺陷总数 12,crazing 4、patches 3、inclusion 3、rolled-in_scale 2
-#
-# # ---- 任务 3 ----
-# try:
-#     with open("practice/demo_data/no_such_file.txt", "r", encoding="utf-8") as f:
-#         content = f.read()
-#     print(content)
-# except FileNotFoundError:
-#     print("文件没找到,请检查路径")
-# print("程序继续运行,没有崩溃")
-#
-# # ---- 任务 4 ----
-# # day06_my_tools.py 的内容:
-# #     def count_lines(path):
-# #         """数一个文件有多少行,返回行数"""
-# #         n = 0
-# #         with open(path, "r", encoding="utf-8") as f:
-# #             for line in f:
-# #                 if line.strip():
-# #                     n += 1
-# #         return n
-# #
-# #     def count_classes(path):
-# #         """统计标注文件里每个类别出现几次,返回字典"""
-# #         counts = {}
-# #         with open(path, "r", encoding="utf-8") as f:
-# #             for line in f:
-# #                 parts = line.strip().split()
-# #                 if not parts:
-# #                     continue
-# #                 name = parts[0]
-# #                 if name in counts:
-# #                     counts[name] += 1
-# #                 else:
-# #                     counts[name] = 1
-# #         return counts
-#
-# import my_tools
-# path = "practice/demo_data/labels_demo.txt"
-# print("行数:", my_tools.count_lines(path))
-# print("类别统计:", my_tools.count_classes(path))
-#
-# # ---- 加餐 ① ----
-# students = {"张三": {"语文": 88, "数学": 95},
-#             "李四": {"语文": 92, "数学": 79}}
-# for name, scores in students.items():
-#     total = 0
-#     for subject, mark in scores.items():
-#         print(f"{name} 的 {subject}: {mark}")
-#         total = total + mark
-#     print(f"{name} 总分: {total}")
-#
-# # ---- 加餐 ②(项目版) ----
-# data = [("img1", "crazing"), ("img1", "patches"), ("img1", "crazing"),
-#         ("img2", "rolled"),
-#         ("img3", "inclusion"), ("img3", "inclusion"), ("img3", "crazing")]
-#
-# result = {}
-# for img, cls in data:
-#     if img not in result:
-#         result[img] = {}
-#     if cls in result[img]:
-#         result[img][cls] += 1
-#     else:
-#         result[img][cls] = 1
-#
-# for img, cls_counts in result.items():
-#     parts = []
-#     for cls, n in cls_counts.items():
-#         parts.append(f"{cls} {n} 个")
-#     print(f"{img}: {', '.join(parts)}")
-# # 期望结果:img1 有 crazing 2 个 / patches 1 个;img2 只有 rolled 1 个;
-# #          img3 是 inclusion 2 个 / crazing 1 个
-#
-#
-# ==============================================================
-# 做完之后:今天开始告别"练习题",进真实项目
-# ==============================================================
-# 从 10/9 起不再有 practice 里的练习题了,代码直接写在项目里:
-#   10/9  day7 opencv1.py  读图、灰度、缩放、保存、高斯滤波
-#   10/10 opencv2.py  Canny 边缘检测、轮廓提取、画外框
-#   10/11 NEU-DET 数据集下载 + 人工认六类缺陷 + 统计脚本
-#
-# 所以今天这两件事必须练熟:【从文件读数据】和【自己写函数】。
-# 10/11 那个统计脚本,就是今天的任务 2 换一个数据源 —— 循环结构一个字都不用改。

@@ -6,3 +6,4 @@ __pycache__/
 .idea/
 
 practice/out/
+practice/demo_data/my_first_file.txt
