@@ -4,7 +4,12 @@
 # ② 到 PyCharm 里翻 data/NEU-DET/IMAGES/,每类点开 2~3 张真图看看
 # ③ 在下面注释里写下你的观察:哪两类最像?为什么难分辨?
 # 我的观察:
-
+#1.crazing(裂纹):裂纹感觉像是自然裂开，naturally
+#2.inclusion(夹杂):like some mixed stuff
+#3.patches(斑块):bigger than inclusions
+#4.pitted surface(麻点):lots of small pot are made
+#5.rolled-in scales(氧化皮):maybe for long time
+#6.scratches(划痕):literally human do
 
 # ==============================================================
 # 【任务 1】摸清目录里有什么                ★★★ 必做
@@ -17,7 +22,12 @@
 #   想数"jpg 有几个":for 循环 + 字符串 endswith(".jpg") 判断
 
 print("MISSION 1:")
-
+import os
+f=os.listdir("data/NEU-DET/ANNOTATIONS")
+print(f[:5])
+xml_n = len([f for f in f if f.endswith(".xml")])
+img_n = len([f for f in os.listdir("data/NEU-DET/IMAGES") if f.endswith(".jpg")])
+print(f"xml 文件 {xml_n} 个, jpg 文件 {img_n} 个")
 
 # ==============================================================
 # 【任务 2】从文件名切出类别                ★★★ 必做
