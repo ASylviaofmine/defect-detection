@@ -28,6 +28,7 @@ print(f[:5])
 xml_n = len([f for f in f if f.endswith(".xml")])
 img_n = len([f for f in os.listdir("data/NEU-DET/IMAGES") if f.endswith(".jpg")])
 print(f"xml 文件 {xml_n} 个, jpg 文件 {img_n} 个")
+print()
 
 # ==============================================================
 # 【任务 2】从文件名切出类别                ★★★ 必做
@@ -42,7 +43,17 @@ print(f"xml 文件 {xml_n} 个, jpg 文件 {img_n} 个")
 # ④ 写出能正确处理全部六类的切法,print 几个结果验证
 # 提示:
 #   判断"某段是不是数字"可以用 str.isdigit(),比如 "123".isdigit() 是 True
-print("任务 2:")
+
+print("Mission 2:")
+stem="pitted_surface_1.xml".replace(".xml","")
+parts=stem.split("_")
+print(f"final:",parts)
+cls="_".join([p for p in parts if not p.isdigit()] )
+print(f"class:",cls)
+for t in ["crazing_1.xml", "rolled-in_scale_27.xml", "scratches_20.xml"]:
+    c = "_".join([p for p in t.replace(".xml", "").split("_") if not p.isdigit()])
+    print(f"  {t:28s} -> {c}")
+print()
 
 
 # ==============================================================
@@ -65,4 +76,22 @@ print("任务 2:")
 #   你也可以试试 import day06_my_tools,但它的 count_classes 是按
 #   "每行第一个空格前的词"切的(为 YOLO 的 txt 设计),对 XML 文件名不适用。
 #   所以这里【自己写】更合适 —— 理解这一点,你就懂了"函数不能无脑复用"。
-print("任务 3:")
+print("Mission 3:")
+counts={}
+for f in os.listdir("data/NEU-DET/ANNOTATIONS"):
+    if not f.endswith(".xml"):
+        continue
+    cls = "_".join([p for p in f.replace(".xml", "").split("_") if not p.isdigit()])
+    counts[cls] = counts.get(cls, 0) + 1
+print(counts)
+
+
+names=["crazing","inclusion","patches","pitted_surface","rolled-in_scale","scratches"]
+total=sum(counts.values())
+print(f"{'类别':<16}{'数量':>4}{'占比':>7}")
+print("-"*33)
+for n in names:
+    c = counts[n]
+    print(f"{n:<18}{c:>6}{c / total * 100:>8.1f}%")  # 8.1f 得 8 字符,再加 % 就是 9
+print("-" * 33)
+print(f"{'总计':<16}{total:>6}{100.0:>8.1f}%")
