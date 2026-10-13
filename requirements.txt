@@ -1,5 +1,15 @@
-numpy
-opencv-python
-matplotlib
-ultralytics
-gradio
+# Tested on Windows 11 x64 / Python 3.13.15 / NVIDIA RTX 4060 Laptop (8 GB), CUDA 12.7 driver
+#
+# NOTE: on Windows the default PyPI wheel of torch is CPU-only.
+# Install the CUDA build from the matching wheel index instead, e.g.
+#   pip install torch==2.9.1+cu126 torchvision==0.24.1+cu126 --index-url https://download.pytorch.org/whl/cu126
+# otherwise torch.cuda.is_available() is False.
+
+numpy==2.5.3
+opencv-python==5.0.0.93
+matplotlib==3.11.2
+ultralytics==8.4.163
+gradio==6.28.0
+
+torch==2.9.1+cu126
+torchvision==0.24.1+cu126
