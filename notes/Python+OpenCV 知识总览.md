@@ -140,7 +140,7 @@ sorted(num) / num.sort()      # 排序（升序/降序）
 **你的代码证据**：**同一套逻辑写了三遍**
 
 ```python
-# day2 作业练习.py:71-78 —— 词频统计（假数据）
+# day002 作业练习.py:71-78 —— 词频统计（假数据）
 for word in text.split():
     if word in counts:
         counts[word] += 1     # 已经见过，+1
@@ -149,7 +149,7 @@ for word in text.split():
 for word, n in counts.items():
     print(word, n)
 
-# day6 Practice.py:118-127 —— 数每一类缺陷（12 行假数据）
+# day006 Practice.py:118-127 —— 数每一类缺陷（12 行假数据）
 for line in f:
     name = line.split()[0]
     if name in counts:
@@ -157,7 +157,7 @@ for line in f:
     else:
         counts[name] = 1
 
-# day8 practice.py:85 —— 数 1800 个真实标注文件（终于用上真数据）
+# day008 practice.py:85 —— 数 1800 个真实标注文件（终于用上真数据）
 counts[cls] = counts.get(cls, 0) + 1     # get 的默认值写法，等价于上面 if/else
 ```
 
