@@ -7,3 +7,6 @@ __pycache__/
 
 practice/out/
 practice/demo_data/my_first_file.txt
+
+# 权重下载中的临时文件
+*.part
