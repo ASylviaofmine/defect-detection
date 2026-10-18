@@ -205,7 +205,9 @@ Three implementation details worth naming, because each of them is a silent fail
 
 A confidence sweep on `scratches_271.jpg` shows the threshold trade-off directly: **9 boxes at conf 0.15 → 7 at 0.25 → 4 at 0.50**, and the ground truth for that image is **4**. At the default 0.25 the model over-produces boxes on its *best* class (AP 0.838) — high AP does not mean every box is right.
 
-Screenshot → `docs/figures/gradio_demo.png` (pending); 1–2 minute screen recording → to be linked here.
+![Gradio demo](docs/figures/gradio_demo.jpg)
+
+*Upload panel (left), confidence slider, and the annotated result (right): `crazing_271.jpg` from the held-out split, 3 boxes at 0.47 / 0.29 / 0.26 — the same numbers the CLI inference prints, confirming the web layer adds no behaviour of its own.*
 
 ---
 

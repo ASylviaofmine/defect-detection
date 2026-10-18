@@ -173,6 +173,16 @@
 #           WEIGHT = ROOT / "runs/detect/yolov8s_640/weights/best.pt"
 #           assert WEIGHT.exists(), f"找不到权重: {WEIGHT}"   # 早报错,别跑一半崩
 #
+#       ⚠️⚠️ 这里有个必须说清的细节(2026-10-18 实测踩到):
+#           Path(__file__).parent 是"**脚本自己所在的目录**",不是"项目根目录"。
+#           它在这里等于仓库根,只因为 app.py 就放在仓库根。
+#           如果你把同样几行写进 practice/day014 practice.py,
+#           ROOT 就变成 ...\defect_detection\practice,
+#           权重会拼成 practice\runs\...\best.pt → 报"找不到权重"。
+#           脚本在下一层时,要多退一层:
+#               ROOT = Path(__file__).parent.parent      # practice → defect_detection
+#           一句话:__file__ 解决"跟启动目录无关",但**不解决"脚本放在哪一层"**。
+#
 #   改动 ② 加置信度滑块(注意 bgr 那一行不能少)
 #           def detect_and_draw(image, conf):
 #               bgr = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
