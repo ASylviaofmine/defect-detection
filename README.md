@@ -189,9 +189,23 @@ Fine-tuning vs. no fine-tuning, same image, same threshold (`conf≥0.25`):
 
 The network architecture is identical in both columns; the only difference is 26 minutes of training on 1620 steel-defect images. Annotated output images are written by `practice/day012 practice.py` into `practice/out/`.
 
-### 4.5 Gradio demo — *pending*
+### 4.5 Gradio demo — *code working, screenshot pending*
 
-Screenshot → `docs/figures/gradio_demo.png`; 1–2 minute screen recording → linked here.
+`app.py` is the runnable demo: upload an image (or click one of the three bundled samples in `docs/samples/`), get the annotated image back plus a one-line count per class, with a confidence slider.
+
+```bash
+python app.py     # -> http://127.0.0.1:7860
+```
+
+Three implementation details worth naming, because each of them is a silent failure mode:
+
+1. **Channel order.** Gradio hands over RGB; OpenCV/Ultralytics expect BGR. Converting on the way in and back on the way out is mandatory — skipping it raises no error, it just swaps red and blue and the detection quality quietly degrades.
+2. **The model is loaded once at import**, not inside the callback. Loading inside would re-read the 22 MB checkpoint on every click (~2–3 s) — the page still "works", it just feels broken.
+3. **The weight path is resolved from `Path(__file__).parent`**, not from the current working directory, so the demo runs from any directory. (Relative paths resolve against the cwd, not the script location — that exact difference cost an hour earlier in the project.)
+
+A confidence sweep on `scratches_271.jpg` shows the threshold trade-off directly: **9 boxes at conf 0.15 → 7 at 0.25 → 4 at 0.50**, and the ground truth for that image is **4**. At the default 0.25 the model over-produces boxes on its *best* class (AP 0.838) — high AP does not mean every box is right.
+
+Screenshot → `docs/figures/gradio_demo.png` (pending); 1–2 minute screen recording → to be linked here.
 
 ---
 
@@ -285,7 +299,7 @@ yolo detect val model=runs/detect/yolov8n_baseline/weights/best.pt data=data/NEU
 python app.py     # Gradio demo -> http://127.0.0.1:7860
 ```
 
-*(`app.py`, the evaluation wrapper and the figure-export script are added during the training/evaluation stage; this section is updated as each one lands.)*
+`app.py` loads `runs/detect/yolov8s_640/weights/best.pt`, so run at least one training run first. The demo is served by the Python process itself — Ctrl+C takes the page down, and it is not a deployment.
 
 ### 6.7 Repository layout
 
@@ -294,9 +308,12 @@ defect-detection/
 ├── practice/              # day-by-day learning code, day001 … (see §7)
 ├── tools/                 # dataset notes, audit + helper scripts
 ├── notes/                 # Python + OpenCV study notes
+├── docs/
+│   ├── samples/           # 3 sample images so the demo runs without the full dataset
+│   └── figures/           # screenshots used in this README
 ├── data/                  # dataset — git-ignored
 ├── runs/                  # training output — git-ignored
-├── app.py                 # Gradio web demo                     (planned)
+├── app.py                 # Gradio web demo
 └── requirements.txt
 ```
 
@@ -334,9 +351,10 @@ This project was used as a structured self-teaching programme, so I am explicit 
 
 **Implemented by me (the author)**
 
-- All files named `*Practice*` / `*作业练习*` under `practice/` — day001 through day013. I typed, ran and debugged every line of it myself, including the dataset statistics script, the traditional-CV experiment pipeline, the YOLO inference / label-conversion / visualisation code for day 10, the training launch for day 11, the fine-tuned inference plus results interpretation for day 12, and the two tuning runs for day 13.
+- All files named `*Practice*` / `*作业练习*` under `practice/` — day001 through day014. I typed, ran and debugged every line of it myself, including the dataset statistics script, the traditional-CV experiment pipeline, the YOLO inference / label-conversion / visualisation code for day 10, the training launch for day 11, the fine-tuned inference plus results interpretation for day 12, and the two tuning runs for day 13.
 - All GPU work: model loading, inference at multiple confidence thresholds, the training runs (three of them, run serially because 8 GB of VRAM only fits one), and the resulting observations in §4.1 and §4.2 — run and interpreted by me.
 - The design of the tuning experiments in §4.2: writing down the hypothesis, the cost and the metric to watch *before* launching each run, so that a negative result would still be interpretable. Run C was expected to help and did not; that result is reported as-is rather than dropped.
+- The per-image prediction-vs-ground-truth counts in §4.5, and the observation that the best-scoring class over-produces boxes — found by counting label rows myself rather than trusting the aggregate mAP.
 - The analysis in §2.1, §4.3 and §5 — the edge-pixel measurements, the threshold-sensitivity comparison, the per-class AP reading, the failure-mode diagnosis, the annotation-granularity observation, and the limitations reasoning.
 - Running and interpreting the dataset audits in §2.3.
 - Noticing that the row/column orientation of the confusion matrix in this Ultralytics version is transposed relative to the usual convention, and re-deriving the miss-rate reading from the source (`metrics.py`) rather than accepting the first interpretation — §4.3.
@@ -344,7 +362,8 @@ This project was used as a structured self-teaching programme, so I am explicit 
 **AI-assisted**
 
 - The exercise briefs and the clearly marked `参考答案` (reference-answer) blocks inside the same `practice/` files, which were prepared as a teaching scaffold. The workflow rule I followed was to attempt each task first and only then read the reference — the commit history separates "exercises prepared" from "practice done" for exactly this reason.
-- `tools/NEU-DET_下载说明.md`, `tools/make_sample_sheet.py`, `tools/make_demo_images.py`, `tools/audit_dataset.py`, and the first draft of this README.
+- `tools/NEU-DET_下载说明.md`, `tools/make_sample_sheet.py`, `tools/make_demo_images.py`, `tools/audit_dataset.py`, `tools/compare_runs.py`, and the first draft of this README.
+- `app.py` — the Gradio demo is the reference answer to my day-14 exercise; it was provided as code rather than typed by me from scratch. I ran it, tested it on the sample images and produced the screenshots. The three implementation details in §4.5 are the parts I had to understand to debug it.
 - Explanations of unfamiliar concepts (e.g. what mAP is, why normalised coordinates are used) on request, in a beginner-oriented form.
 - The initial interpretation of the confusion-matrix orientation in the day-12 exercise brief, which I then verified against the library source and corrected (§4.3). The corrected reading — and the fact that it needed correcting — is the version above.
 
@@ -366,6 +385,7 @@ Reference solutions and helper scripts are **not** claimed as my own work; they 
 - [x] **Tuning run B** — `yolov8s` @640: mAP@50 **0.766**, `crazing` AP 0.464 → **0.548** (§4.2)
 - [x] **Tuning run C** — `yolov8n` @960: mAP@50 0.730, `crazing` AP unchanged at 0.464 — resolution is the wrong lever for 200×200 sources (§4.2)
 - [ ] **Prediction visualisations** on the held-out split, including failure cases (§4.4)
-- [ ] **Gradio demo** — screenshot + 1–2 min screen recording (§4.5)
+- [x] **Gradio demo** — `app.py`, upload → annotated image, per-class count, confidence slider (§4.5)
+- [ ] **Demo screenshot + 1–2 min screen recording** (§4.5)
 - [ ] Latency / model-size / accuracy trade-off table
 - [ ] Optional: `onnx` export and a CPU inference benchmark
