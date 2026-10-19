@@ -290,7 +290,8 @@ python tools/make_sample_sheet.py     # -> tools/neu_det_samples.png (six-class 
 ### 6.5 Training
 
 ```bash
-yolo detect train data=data/NEU-DET-yolo/data.yaml model=yolov8n.pt epochs=100 imgsz=640 device=0
+yolo detect train data=data/NEU-DET-yolo/data.yaml model=yolov8n.pt \
+    epochs=100 imgsz=640 batch=32 cache=True workers=4 device=0 name=yolov8n_baseline
 ```
 
 The equivalent in Python, which is what the training script uses:
@@ -298,10 +299,18 @@ The equivalent in Python, which is what the training script uses:
 ```python
 from ultralytics import YOLO
 
-model = YOLO("yolov8n.pt")
-model.train(data="data/NEU-DET-yolo/data.yaml", epochs=100, imgsz=640,
-            batch=16, device=0, name="yolov8n_baseline")
+if __name__ == "__main__":          # required on Windows when workers > 0
+    model = YOLO("yolov8n.pt")
+    model.train(data="data/NEU-DET-yolo/data.yaml", epochs=100, imgsz=640,
+                batch=32, cache=True, workers=4, device=0, name="yolov8n_baseline")
 ```
+
+Two of those arguments are not cosmetic — they are the reason run A takes 15.8 s/epoch instead of ~89 s:
+
+- **`cache=True`** keeps the decoded 1620 images in RAM (~0.2 GB). Without it, the validation pass re-reads 180 files from disk every epoch and costs **93 s/epoch** on its own; with it, ~1 s.
+- **`batch=32` + `workers=4`** keep the GPU fed; the defaults (16 / 8) left it idle between batches.
+
+The `if __name__ == "__main__":` guard is mandatory on Windows: with `workers > 0` the spawn start method re-imports the main file, and without the guard `model.train()` re-enters itself (`RuntimeError: An attempt has been made to start a new process before the bootstrapping phase`).
 
 Results land in `runs/detect/<name>/`: `weights/best.pt`, `results.csv` (per-epoch losses and metrics), `confusion_matrix.png`, `PR_curve.png`, `results.png`.
 
