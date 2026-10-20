@@ -77,9 +77,9 @@
 
 > 想在画面上更干净：另开一个终端（Windows Terminal）跑录制命令，让 PyCharm 的"运行"标签页显示 audit 输出。这样录制终端会被自动最小化，画面里只剩结果。
 
-**EN**：Before training, I audited all 1,800 images: 4,189 boxes, labels paired one to one, every row valid. Only 27 percent hold a single defect — this is multi-instance detection.
+**EN**：Before training, I audited all 1,800 images: 4,189 boxes, labels paired one to one, every row valid. Of the 1,620 training images, only 452 — 28 percent — hold a single defect. This is multi-instance detection, not one box per image.
 
-**中**：训练前我先给 1800 张图做了体检：4189 个框、图签一一对应、每一行都合法。只有 27% 的图是单个缺陷——这是多实例检测任务。
+**中**：训练前我先给 1800 张图做了体检：4189 个框、图签一一对应、每一行都合法。1620 张训练图里，只有 452 张、也就是 28%，是单个缺陷——这是多实例检测，不是一图一框。
 
 ---
 
