@@ -205,7 +205,7 @@ Fine-tuning vs. no fine-tuning, same image, same threshold (`conf≥0.25`):
 
 The network architecture is identical in both columns; the only difference is 26 minutes of training on 1620 steel-defect images. Annotated output images are written by `practice/day012 practice.py` into `practice/out/`.
 
-### 4.5 Gradio demo — *code working, screenshot pending*
+### 4.5 Gradio demo
 
 `app.py` is the runnable demo: upload an image (or click one of the three bundled samples in `docs/samples/`), get the annotated image back plus a one-line count per class, with a confidence slider.
 
@@ -224,6 +224,8 @@ A confidence sweep on `scratches_271.jpg` shows the threshold trade-off directly
 ![Gradio demo](docs/figures/gradio_demo.jpg)
 
 *Upload panel (left), confidence slider, and the annotated result (right): `crazing_271.jpg` from the held-out split, 3 boxes at 0.47 / 0.29 / 0.26 — the same numbers the CLI inference prints, confirming the web layer adds no behaviour of its own.*
+
+**Video walkthrough:** _link added once the recording is uploaded._
 
 ---
 
@@ -252,7 +254,7 @@ Stated up front rather than discovered by the reviewer:
 | Python                   | 3.13.15                             |
 | PyTorch / torchvision    | 2.9.1+cu126 / 0.24.1+cu126          |
 | Ultralytics              | 8.4.163                             |
-| OpenCV                   | 5.0.0.93                            |
+| OpenCV                   | 5.0.0                               |
 | NumPy / Matplotlib       | 2.5.3 / 3.11.2                      |
 | Gradio                   | 6.28.0                              |
 | GPU                      | NVIDIA RTX 4060 Laptop, 8 GB, CUDA 12.7 driver |

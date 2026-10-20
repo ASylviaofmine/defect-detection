@@ -10,3 +10,7 @@ practice/demo_data/my_first_file.txt
 
 # 权重下载中的临时文件
 *.part
+
+# 录屏原始素材（几百 MB，只上传到 Release / YouTube，不进 git）
+*.mp4
+docs/recordings/
