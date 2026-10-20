@@ -34,7 +34,10 @@
 
 ---
 
-### 镜头 2 ｜ 0:08–0:16 ｜ 画面：六类对照图 `tools/neu_det_samples.png`
+### 镜头 2 ｜ 0:08–0:16 ｜ 画面：六类对照图 `docs/figures/six_classes.png`（1356×1116，英文标签，专为视频生成）
+
+> 展示方法：把图拖进浏览器，按 **F11** 全屏——居中且够大。录完按 F11 退出。
+> 原始小图 `tools/neu_det_samples.png`（648×544，中文标签）仍在仓库里，供日常查样本用。
 
 **EN**：NEU-DET defines six surface defect classes: crazing, inclusion, patches, pitted surface, rolled-in scale and scratches.
 
