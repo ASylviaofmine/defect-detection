@@ -187,15 +187,15 @@
 
 | 时间 | 画面 | 旁白进度 |
 | --- | --- | --- |
-| 0–12 s | 静止在第 1 条（高亮："…an upper bound for this benchmark, not a production estimate"） | "All of this was measured on a 180-image validation split from one acquisition setup — a benchmark result, not a production estimate." |
+| 0–12 s | 静止在第 5 条（高亮 "No independent test set"）与第 1 条之间 | "All of this was measured on the **180-image validation split out of the 1,800**, from one acquisition setup — a benchmark result, not a production estimate." |
 | 12–18 s | 鼠标轻移到底部斜体一行（"Next: an independent held-out test protocol, and latency on production edge hardware."） | "Next: a held-out test protocol and edge latency." |
 
-> 旁白里 "180 images" 比 README 第 1 条的 "1800 images" 容易听混——**说的是验证集 180 张**，不是数据集 1800 张，所以 EN 已写成 "a 180-image validation split"。念的时候 180 后面稍微停半拍。
-> 高亮条是画面提示，不需要在旁白里解释。
+> **为什么是 180 不是 1800**：全库 1800 张 = 训练 1620 + 验证 180。mAP 这些指标**只在那 180 张上算**；说成 1800 会让人以为在训练数据上给自己打分，那反而是污点。所以念 "**180 out of the 1,800**"——既交代了分母，也接上了镜头 4 屏幕上那个 1800。
+> 补充事实（被问到时能答）：这 180 张在训练时**不参与梯度更新**，但每轮会拿它算分来挑 best checkpoint，所以它严格说是 validation 而非独立 test——这正是 Limitations 第 5 条，也是旁白最后一句 "a held-out test protocol" 的来源。
 
-**EN**：All of this was measured on a 180-image validation split from one acquisition setup — a benchmark result, not a production estimate. Next: a held-out test protocol and edge latency.
+**EN**：All of this was measured on the 180-image validation split out of the 1,800, from one acquisition setup — a benchmark result, not a production estimate. Next: a held-out test protocol and edge latency.
 
-**中**：这些数字都来自同一台设备拍的 180 张验证图——是基准成绩，不是产线估计。下一步是做独立测试集和边缘设备延迟测试。
+**中**：这些数字是在 1800 张里留出的 **180 张验证集**上测的，而且都来自同一套采集设备——是基准成绩，不是产线估计。下一步：独立测试集和边缘设备延迟。
 
 ---
 
