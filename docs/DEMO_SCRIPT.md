@@ -45,7 +45,10 @@
 
 ---
 
-### 镜头 3 ｜ 0:16–0:32 ｜ 画面：day9 的 Canny 对比图（crazing 满屏 vs inclusion 几乎为零）
+### 镜头 3 ｜ 0:16–0:32 ｜ 画面：`docs/figures/canny_threshold_problem.png`（1228×1002，英文标注，专为视频生成）
+
+> 展示方法：拖进浏览器 → **F11** 全屏。上下两行对比就是论据本身，不用额外解释。
+> （day9 的原始输出 `practice/out/real_canny_*.png` 是 200×200 的裸边缘图，单看没有说服力。）
 
 **EN**：I started with Canny. One threshold floods a crazing image — 38 percent of pixels lit — or misses an inclusion at 0.6 percent. No single threshold serves six classes. That measurement is why I moved to a learned detector.
 
