@@ -56,7 +56,26 @@
 
 ---
 
-### 镜头 4 ｜ 0:32–0:46 ｜ 画面：终端跑 `python tools/audit_dataset.py` 的输出
+### 镜头 4 ｜ 0:32–0:46 ｜ 画面：终端里 `tools/audit_dataset.py` 的**已完成输出**
+
+> ⚠️ 这个检查跑一次要 **34 秒**（要读 1800 个 XML），镜头只有 14 秒旁白，**不能现场跑**——画面会变成干等。
+> 做法：**先跑完，再录屏幕上已经显示的结果。**
+
+具体步骤：
+
+1. 打开一个终端，**最大化**窗口，字号调到能看清（`Ctrl + 滚轮`）。
+2. 先跑一次，让输出留在屏幕上：
+   ```bash
+   python tools/audit_dataset.py
+   ```
+3. 等它打印出 `体检通过 ✓  可以开训练了`，**不要清屏**。
+4. 紧接着在同一个终端里录（这里必须加 `--keep-console`，否则终端会被自动最小化，audit 的输出就跟着消失了）：
+   ```bash
+   python tools/record_demo.py s4 --seconds 17 --keep-console
+   ```
+5. 倒计时结束后念旁白，鼠标**别乱动**，也不要挡住 `189 / 4189 / ✓` 那几行。
+
+> 想在画面上更干净：另开一个终端（Windows Terminal）跑录制命令，让 PyCharm 的"运行"标签页显示 audit 输出。这样录制终端会被自动最小化，画面里只剩结果。
 
 **EN**：Before training, I audited all 1,800 images: 4,189 boxes, labels paired one to one, every row valid. Only 27 percent hold a single defect — this is multi-instance detection.
 
@@ -134,7 +153,7 @@ python tools/record_demo.py --list         # 确认能看到「麦克风阵列 (
 python tools/record_demo.py s1 --seconds 11
 python tools/record_demo.py s2 --seconds 11
 python tools/record_demo.py s3 --seconds 19
-python tools/record_demo.py s4 --seconds 17
+python tools/record_demo.py s4 --seconds 17 --keep-console   # audit 输出要留在屏幕上,不能让终端最小化
 python tools/record_demo.py s5 --seconds 25
 python tools/record_demo.py s6 --seconds 30
 python tools/record_demo.py s7 --seconds 18
