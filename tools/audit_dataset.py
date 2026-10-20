@@ -11,8 +11,10 @@
 import os
 import sys
 from collections import Counter
+from pathlib import Path
 
-ROOT = "data/NEU-DET-yolo"
+ROOT = str(Path(__file__).resolve().parent.parent / "data" / "NEU-DET-yolo")
+SPLIT_TOTALS = {}       # split -> (图片数, 框数),供最后打印总计
 CLASS_NAMES = {0: "crazing", 1: "inclusion", 2: "patches",
                3: "pitted_surface", 4: "rolled-in_scale", 5: "scratches"}
 
@@ -98,6 +100,10 @@ def audit_split(root, split):
     for cid in sorted(cls_counter):
         n = cls_counter[cid]
         print(f"    {cid} {CLASS_NAMES.get(cid, '?'):<16} {n:>4} 个框  ({n / total * 100:5.1f}%)")
+    n_files = sum(lines_per_file.values())          # lines_per_file 是"行数 -> 文件数"的计数表
+    single = lines_per_file.get(1, 0)
+    print(f"  合计 {total} 个框,平均 {total / max(n_files, 1):.2f} 个/图;"
+          f" 单框图 {single} 张 ({single / max(n_files, 1) * 100:.0f}%)")
 
     if problems:
         ok = False
@@ -108,6 +114,7 @@ def audit_split(root, split):
     sample = os.listdir(idir)[:5]
     sizes = Counter(jpeg_size(os.path.join(idir, f)) for f in sample)
     print(f"  抽查 {len(sample)} 张图片尺寸: {dict(sizes)}")
+    SPLIT_TOTALS[split] = (n_files, total)
     return ok
 
 
@@ -119,6 +126,10 @@ def main():
     results = [audit_split(ROOT, s) for s in ("train", "test")]
     print()
     print("=" * 56)
+    if SPLIT_TOTALS:
+        imgs = sum(n for n, _ in SPLIT_TOTALS.values())
+        boxs = sum(b for _, b in SPLIT_TOTALS.values())
+        print(f"合计 {imgs} 张图 / {boxs} 个框")
     print("体检通过 ✓  可以开训练了" if all(results)
           else "发现问题 ✗  先修数据,别急着开训练")
     print("=" * 56)
