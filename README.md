@@ -337,7 +337,7 @@ defect-detection/
 ├── notes/                 # Python + OpenCV study notes
 ├── docs/
 │   ├── samples/           # 3 sample images so the demo runs without the full dataset
-│   └── figures/           # screenshots used in this README
+│   └── figures/           # screenshots and demo-video props used in this README
 ├── data/                  # dataset — git-ignored
 ├── runs/                  # training output — git-ignored
 ├── app.py                 # Gradio web demo
