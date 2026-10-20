@@ -85,6 +85,26 @@
 
 ### 镜头 5 ｜ 0:46–1:08 ｜ 画面：README §4.2 三组实验表格（慢慢往下滚）
 
+> **素材出处：`README.md` 第 122–147 行**（`### 4.2 Quantitative metrics (measured)` 到 `Source of truth: runs/detect/compare_report.md`）。
+> 这一段没有图片文件，画面就是 README 本身——旁白要的数字（26.3 min / 0.758 / 0.766 / 0.46→0.55 / 200×200）**全部在这一屏里**。
+
+具体步骤：
+
+1. 在 PyCharm 里打开 `README.md`，点右上角的**预览**图标（分栏或纯预览都行）——**必须走预览**，源码模式看不明白表格。
+2. 预览字号调大：`设置 → 语言和框架 → Markdown → 预览 → 字体大小` 改到 **20~22**（默认 14 在 1080p 录像里偏小）。
+3. `Ctrl + G` 跳到第 **126** 行，让三行实验数据的表格完整入镜，鼠标移到窗口外（别压住表格）。
+4. 开录：`python tools/record_demo.py s5 --seconds 25`
+5. 倒计时结束后按下面的节奏滚：
+
+| 时间 | 画面 | 旁白进度 |
+| --- | --- | --- |
+| 0–8 s | 停在表格，`A / B / C` 三行全在画面里 | "…26 minutes … mAP 0.758 … 0.766" |
+| 8–16 s | 慢滚到第 142 行（`B — larger backbone … confirmed`） | "lifted the hardest class, crazing, from 0.46 to 0.55" |
+| 16–25 s | 继续滚到第 143 行（`C — higher resolution … refuted`），停住 | "changed crazing by zero … nothing to recover" |
+
+> ⚠️ 只滚到第 147 行就停。再往下是 §4.3 的几张全屏大图（第 158 行起），一闪而过会让画面很乱。
+> 表格有 10 列，预览窗口**最大化**才不会挤成两行；实在嫌挤，可以直接停在 notes（第 132–147 行）——旁白要的数字那里都有，而且列表比方表好读。
+
 **EN**：Fine-tuning YOLOv8n for a hundred epochs took 26 minutes on a laptop GPU and reached mAP 0.758. A larger backbone reached 0.766, and lifted the hardest class, crazing, from 0.46 to 0.55. Raising input resolution to 960 changed crazing by zero — the images are 200 pixels square, so there was nothing to recover.
 
 **中**：在笔记本 GPU 上微调 YOLOv8n 一百轮，26 分钟，mAP 0.758。换更大的骨干网络到 0.766，把最难的裂纹类从 0.46 提到 0.55。但把输入分辨率提到 960，裂纹类一点没变——原图只有 200×200，没有信息可以找回来。
