@@ -108,9 +108,35 @@
 
 ---
 
-### 镜头 6 ｜ 1:08–1:35 ｜ 画面：网页 demo，拖入 `scratches_271.jpg` → 7 个框 → 滑块拉到 0.50 → 4 个框
+### 镜头 6 ｜ 1:08–1:35 ｜ 画面：网页 demo，拖入 `docs/samples/scratches_271.jpg` → 7 个框 → 滑块拉到 0.50 → 4 个框
 
-> 操作节奏：拖进去 → 停 2 秒（让人看清 7 个框）→ 慢慢拉滑块 → 点 Submit → 停 2 秒（4 个框）
+> **素材出处：`docs/samples/scratches_271.jpg`**（也是页面下方**第 2 个示例图**，点它比拖拽更稳，见下面的备选方案）。
+> **实测数字（刚复核过）**：conf 0.25 → **7 框**（0.76 / 0.70 / 0.66 / 0.51 / 0.34 / 0.30 / 0.28）；conf 0.50 → **4 框**（0.76 / 0.70 / 0.66 / 0.51）。真值也是 4 个。
+> 顺手能讲的一个点：第 4 个框 0.51、第 5 个 0.34，**中间有断档**——阈值 0.50 正好落在缝里，所以不是"硬凑"出来的 4。
+
+**录制前必须做完（否则 30 秒里会有一段死等）**
+
+1. 在 `defect_detection` 目录起服务：`python app.py`
+2. **等约 25 秒**（torch 10.8 s + ultralytics 3.4 s），看到 `Running on local URL: http://127.0.0.1:7860` 再往下。
+3. 浏览器打开 `http://127.0.0.1:7860`，**先把图拖进去点一次 Submit 热身**——首次推理要 8.9 秒，之后 0.05 秒。热身完清掉结果（图片框右上角 × ），保持空页面待录。
+4. 浏览器**最大化**，再按 `Ctrl` + `=` 放大 2~3 档，让两栏内容占满画面（默认宽度只占中间一窄条）。
+
+**录制**
+
+5. 开录：`python tools/record_demo.py s6 --seconds 30`
+6. 倒计时结束后按节奏操作：
+
+| 时间 | 操作 | 旁白进度 |
+| --- | --- | --- |
+| 0–6 s | 把 `scratches_271.jpg` 拖进左上"上传"框（**别拖到地址栏**），点 **Submit** | "Here it is running…"（先让 7 个框出现在画面上） |
+| 6–9 s | 手离开鼠标，停住 | "This image has four defects. At the default threshold the model reports seven" |
+| 9–20 s | 把滑块从 0.25 **慢慢**拖到 0.50（画面数字跟着变） | "…at 0.50 it reports exactly four" |
+| 20–22 s | 点 **Submit** | 停半秒 |
+| 22–30 s | 手离开鼠标，停在结果页（4 个框 + 下方 Summary 文字） | "The trade-off between missing a defect and raising a false alarm is visible, not hidden." |
+
+> ⚠️ **滑块改完必须再点一次 Submit**，Gradio 不会自动重跑。这是最容易录废的一步。
+> ⚠️ 端口 7860 若被占（以前踩过）：`netstat -ano | findstr :7860` 查到 PID 后 `taskkill /PID <pid> /F`，再重启 `python app.py`。
+> 备选（更稳、少 3 秒拖拽风险）：直接点页面下方**第 2 个示例图**（就是 `scratches_271.jpg`），Gradio 会自动填入并跑到 7 框；然后拉滑块 + Submit。缺点是不如"拖入"像真人在用。
 
 **EN**：Here it is running. This image has four defects. At the default threshold the model reports seven; at 0.50 it reports exactly four. The trade-off between missing a defect and raising a false alarm is visible, not hidden.
 
