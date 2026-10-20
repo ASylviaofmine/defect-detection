@@ -144,7 +144,29 @@
 
 ---
 
-### 镜头 7 ｜ 1:35–1:50 ｜ 画面：同一个网页，拖入 `crazing_271.jpg` → 只有 3 个低置信度框
+### 镜头 7 ｜ 1:35–1:50 ｜ 画面：同一个网页，拖入 `docs/samples/crazing_271.jpg` → 只有 3 个低置信度框
+
+> **素材出处：`docs/samples/crazing_271.jpg`**（页面下方**第 1 个示例图**）。
+> **实测数字**：conf **0.25 → 3 框**，置信度 **0.47 / 0.29 / 0.26**（三个都不高，两个低于 0.3）；标签文件里真值是 **4 框**，所以这是**漏了 1 个**，不是认错类。
+> **这一镜不用重启服务**——`app.py` 一直开着，浏览器别关，画面才和镜头 6 连续。
+
+**⚠️ 录之前第一件事：把滑块拉回 0.25。**
+镜头 6 录完滑块停在 **0.50**，而 `crazing_271` 在 0.50 下输出 **0 个框**（实测）。忘了这一步，画面会显示"未检测到缺陷"，和旁白 "three weak boxes" 直接矛盾，整段作废。
+
+**步骤**
+
+1. 浏览器回到 `http://127.0.0.1:7860`（确认还是同一个窗口、缩放没变）。
+2. 清空上一镜的 images：图片框右上角 **×**；**滑块拖回 0.25**。
+3. 开录：`python tools/record_demo.py s7 --seconds 18`
+4. 倒计时结束后：
+
+| 时间 | 操作 | 旁白进度 |
+| --- | --- | --- |
+| 0–5 s | 拖入 `crazing_271.jpg` → 点 **Submit** | "On the hardest class…" |
+| 5–10 s | 手离开鼠标，停住，让 3 个框和框上的 0.47 / 0.29 / 0.26 入镜 | "…it finds only three weak boxes." |
+| 10–18 s | 不动。想再强调就把鼠标移到下方 Summary（"裂纹 × 3"） | "I show this on purpose: the failure mode is misses, not wrong labels." |
+
+> 想更有说服力但**不建议开口说**：真值是 4 框。口头提"four"而画面上只有 3 个框，观众反而找不到依据——这个数字留给 §4.3 的每类 AP 表和混淆矩阵去支撑。
 
 **EN**：On the hardest class it finds only three weak boxes. I show this on purpose: the failure mode is misses, not wrong labels.
 
