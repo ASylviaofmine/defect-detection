@@ -174,11 +174,28 @@
 
 ---
 
-### 镜头 8 ｜ 1:50–2:05 ｜ 画面：README 的 Limitations 章节，滚到结尾
+### 镜头 8 ｜ 1:50–2:05 ｜ 画面：`docs/figures/limitations_5.html`（拖进浏览器 + F11，与镜头 5 同一套操作）
 
-**EN**：All of this was measured on 180 images from one acquisition setup — a benchmark result, not a production estimate. Next: a held-out test protocol and edge latency.
+> **素材出处：`docs/figures/limitations_5.html`** —— 录屏专用单页，内容与 README §5（9 条 Limitations）一字不差，**一屏放得下，不用滚动**。旁白点到的条目（1 小数据集 / 3 单一采集设备 / 5 无独立测试集 / 8 无边缘端延迟）有蓝色高亮条。
+> 为什么不直接拍 README：预览模式没有行号、字号小、9 条超过一屏必须滚——15 秒里滚这么密的技术文本，观众一个字都读不进。
 
-**中**：这些数字都来自同一台设备拍的 180 张图——是基准成绩，不是产线估计。下一步是做独立测试集和边缘设备延迟测试。
+**步骤**
+
+1. 把 `docs/figures/limitations_5.html` 拖进浏览器 → **F11** 全屏。
+2. 开录：`python tools/record_demo.py s8 --seconds 18`
+3. 倒计时结束后念旁白。**全程不需要动鼠标**——让画面完全静止，这 15 秒是"诚实时刻"，越稳越好：
+
+| 时间 | 画面 | 旁白进度 |
+| --- | --- | --- |
+| 0–12 s | 静止在第 1 条（高亮："…an upper bound for this benchmark, not a production estimate"） | "All of this was measured on a 180-image validation split from one acquisition setup — a benchmark result, not a production estimate." |
+| 12–18 s | 鼠标轻移到底部斜体一行（"Next: an independent held-out test protocol, and latency on production edge hardware."） | "Next: a held-out test protocol and edge latency." |
+
+> 旁白里 "180 images" 比 README 第 1 条的 "1800 images" 容易听混——**说的是验证集 180 张**，不是数据集 1800 张，所以 EN 已写成 "a 180-image validation split"。念的时候 180 后面稍微停半拍。
+> 高亮条是画面提示，不需要在旁白里解释。
+
+**EN**：All of this was measured on a 180-image validation split from one acquisition setup — a benchmark result, not a production estimate. Next: a held-out test protocol and edge latency.
+
+**中**：这些数字都来自同一台设备拍的 180 张验证图——是基准成绩，不是产线估计。下一步是做独立测试集和边缘设备延迟测试。
 
 ---
 

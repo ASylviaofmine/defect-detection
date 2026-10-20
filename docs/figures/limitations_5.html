@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>5. Limitations — recording prop</title>
+<style>
+  :root {
+    --ink: #16181d;
+    --muted: #5b6472;
+    --line: #e3e7ee;
+    --accent: #1f5fa8;
+    --bg: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  html { font-size: 24px; }
+  body {
+    margin: 0;
+    padding: 44px 68px 40px;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
+    line-height: 1.45;
+  }
+  h1 {
+    font-size: 1.55rem;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  .lede {
+    color: var(--muted);
+    font-size: 0.82rem;
+    margin: 0 0 22px;
+  }
+  ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: lim;
+  }
+  li {
+    counter-increment: lim;
+    position: relative;
+    padding: 0 0 0 46px;
+    margin-bottom: 13px;
+    font-size: 0.86rem;
+  }
+  li::before {
+    content: counter(lim);
+    position: absolute;
+    left: 0;
+    top: 0.12em;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #eef2f8;
+    color: var(--accent);
+    font-size: 0.72rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-variant-numeric: tabular-nums;
+  }
+  li b {
+    font-weight: 700;
+    color: #0d1117;
+  }
+  li code {
+    font-family: "Cascadia Mono", Consolas, monospace;
+    font-size: 0.94em;
+    background: #f4f6fa;
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  li.key { background: #f7faff; border-left: 4px solid var(--accent); padding: 10px 0 10px 46px; margin-left: -68px; padding-left: 106px; }
+  li.key::before { left: 62px; background: #dbe7f7; }
+  .foot {
+    margin-top: 18px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<h1>5. Limitations</h1>
+<p class="lede">Stated up front rather than discovered by the reviewer:</p>
+
+<ol>
+  <li class="key"><b>Small benchmark dataset.</b> 1800 images at 200×200 greyscale is far below the resolution and volume of a real line-scan camera. Any accuracy figure here is an upper bound for this benchmark, not a production estimate.</li>
+  <li><b>Artificial class balance.</b> Exactly 300 images per class, and even at box level the distribution is only mildly uneven (<code>inclusion</code> 922 boxes vs <code>pitted_surface</code> 386). Real strip production is far more long-tailed, so per-class performance on genuinely rare classes would very likely degrade. No re-weighting, resampling or augmentation strategy for imbalance has been tested — because this benchmark does not exhibit it.</li>
+  <li class="key"><b>Benchmark-to-factory domain gap.</b> NEU-DET images come from one acquisition setup (lighting, magnification, material batch). No cross-factory or cross-camera generalisation test has been run, and none is possible with public data alone.</li>
+  <li><b>Uneven annotation granularity between classes.</b> Boxes are drawn per defect <i>occurrence</i>, but the granularity is not consistent across classes: a <code>crazing</code> image may carry a single box covering ~95 % of the frame, while other images carry up to 9 small boxes. IoU-based metrics are therefore not directly comparable between classes — a large box is much easier to match than a small one.</li>
+  <li class="key"><b>No independent test set.</b> The 180-image validation split ships with the converted dataset; there is no separate human-adjudicated test protocol, and the split was neither re-derived nor stratified by me. All reported numbers therefore describe this one fixed split.</li>
+  <li><b>Single-frame only.</b> No temporal or multi-view consistency; a false positive on one frame is never corrected by neighbouring frames, which a real line-scan system would exploit.</li>
+  <li><b>Only six defect types.</b> Unknown defects are forced into one of six classes with no "unknown / reject" option.</li>
+  <li class="key"><b>No deployment characterisation.</b> Latency is measured on a laptop GPU (RTX 4060 Laptop, 8 GB), not on production edge hardware; model-size vs accuracy vs throughput trade-offs are not yet quantified.</li>
+  <li><b>The traditional baseline is a comparison, not a competitor.</b> It was implemented to justify the learned approach on this data; it was not tuned to its own best possible performance.</li>
+</ol>
+
+<p class="foot">Next: an independent held-out test protocol, and latency on production edge hardware.</p>
+
+</body>
+</html>

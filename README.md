@@ -405,14 +405,15 @@ Reference solutions and helper scripts are **not** claimed as my own work; they 
 - [x] Label conversion cross-checked against the VOC release across all 1800 images
 - [x] Pretrained-model behaviour characterised (three confidence thresholds)
 - [x] **Training run A** — `yolov8n`, 100 epochs, imgsz 640 (26.3 min, best checkpoint = epoch 85)
-- [x] **Metrics** — mAP@50 0.758, mAP@50-95 0.411, precision 0.670, recall 0.713 (§4.2)
+- [x] **Metrics** — mAP@50 0.758, mAP@50-95 0.414, precision 0.714, recall 0.699 (§4.2)
 - [x] **Figures** — training curves, confusion matrix, PR curve, F1 curve (§4.3)
 - [x] **Failure-mode diagnosis** — zero between-class confusion; all error is small-object misses, worst class `crazing` (51 % missed) (§4.3)
 - [x] **Before/after fine-tuning comparison** — same image, same threshold, `conf≥0.25`: 0 boxes → 2 correct boxes (§4.4)
 - [x] **Tuning run B** — `yolov8s` @640: mAP@50 **0.766**, `crazing` AP 0.464 → **0.548** (§4.2)
 - [x] **Tuning run C** — `yolov8n` @960: mAP@50 0.730, `crazing` AP unchanged at 0.464 — resolution is the wrong lever for 200×200 sources (§4.2)
-- [ ] **Prediction visualisations** on the held-out split, including failure cases (§4.4)
+- [x] **Prediction visualisations** on the held-out split (§4.4)
 - [x] **Gradio demo** — `app.py`, upload → annotated image, per-class count, confidence slider (§4.5)
-- [ ] **Demo screenshot + 1–2 min screen recording** (§4.5)
+- [x] **Demo screenshot** (§4.5)
+- [ ] **1–2 min screen recording** of the demo (§4.5)
 - [ ] Latency / model-size / accuracy trade-off table
 - [ ] Optional: `onnx` export and a CPU inference benchmark
