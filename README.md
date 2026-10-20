@@ -227,6 +227,26 @@ A confidence sweep on `scratches_271.jpg` shows the threshold trade-off directly
 
 **Video walkthrough:** _link added once the recording is uploaded._
 
+### 4.6 Deployment characteristics (measured)
+
+`tools/bench_latency.py` answers the question a reviewer asks after seeing mAP: *what does it cost to run?* Single-image latency is what the Gradio demo experiences; batch throughput is what a line-scan system would care about.
+
+| Run | Model | imgsz | Params | Weight file | Latency, GPU (batch 1) | Latency, CPU (batch 1) | Throughput, GPU (batch 8) |
+| --- | ----- | ----- | ------ | ----------- | ---------------------- | ---------------------- | ------------------------- |
+| A | `yolov8n` | 640 | 3.01 M | 6.0 MB | 30.6 ms | 122.9 ms | 105 img/s |
+| B | `yolov8s` | 640 | 11.14 M | 21.5 MB | 28.9 ms | 308.3 ms | 81 img/s |
+| C | `yolov8n` | 960 | 3.01 M | 6.0 MB | 33.2 ms | 252.2 ms | 61 img/s |
+
+Measured on the machine that trained the models: **RTX 4060 Laptop (8 GB)** + **Intel i7-13620H (10 threads)**, Windows 11, `torch 2.9.1+cu126`. Warm-up passes discarded; median of 30 (GPU latency) / 8 (CPU latency) / 15 (throughput) **round-robin** passes, so thermal drift is shared by all three models instead of concentrated on the last one measured.
+
+Three things this table says:
+
+1. **Batch-1 GPU latency does not rank the models.** 30.6 ms for `yolov8n` against 28.9 ms for `yolov8s` — a 3.7× difference in parameters lands inside run-to-run noise, because roughly 25 ms of every call is fixed Python, letterbox and NMS overhead rather than convolution. Ranking backbones from batch-1 timings alone would be wrong; the compute difference only shows in the throughput column (105 vs 81 img/s). The first version of this script measured one model to completion before starting the next and reported `yolov8n` as *slower* than `yolov8s` by 1.8×, purely because the first checkpoint paid CUDA context creation and cuDNN autotuning.
+2. **Resolution is the expensive lever, and here it bought nothing.** `yolov8n` at 960 nearly halves throughput (105 → 61 img/s) and adds 8 % latency, for a *lower* mAP than 640 (0.730 vs 0.758) and an unchanged `crazing` AP (0.464). Consistent with §4.2 — the source images are 200×200, so the extra pixels are interpolation, not information.
+3. **CPU inference is not viable at line speed.** 123–308 ms per image is 3–8 images/s, and 200×200 greyscale is the easy case; a full-resolution line-scan frame is far larger. Real deployment needs a GPU, a smaller input, or both.
+
+Honest scope: this is a laptop GPU and a laptop CPU, **not production edge hardware** (Jetson-class, or an industrial smart camera). There is no ONNX or TensorRT export, no measurement inside a real camera pipeline, and no sustained-load thermal test — a 30-second benchmark describes a cold, idle machine.
+
 ---
 
 ## 5. Limitations
@@ -240,7 +260,7 @@ Stated up front rather than discovered by the reviewer:
 5. **No independent test set.** The 180-image validation split ships with the converted dataset (`val: test/images`); there is no separate human-adjudicated test protocol, and the split was neither re-derived nor stratified by me. All reported numbers will therefore describe this one fixed split.
 6. **Single-frame only.** No temporal or multi-view consistency; a false positive on one frame is never corrected by neighbouring frames, which a real line-scan system would exploit.
 7. **Only six defect types.** Unknown defects are forced into one of six classes with no "unknown / reject" option.
-8. **No deployment characterisation.** Latency is measured on a laptop GPU (RTX 4060 Laptop, 8 GB), not on production edge hardware; model-size vs accuracy vs throughput trade-offs are not yet quantified.
+8. **Deployment is characterised on the training machine, not on edge hardware.** §4.6 measures latency and throughput on the laptop GPU and CPU that trained the models — not on Jetson-class or industrial-camera hardware. No ONNX/TensorRT export was benchmarked, and no sustained-load thermal test was run.
 9. **The traditional baseline is a comparison, not a competitor.** It was implemented to justify the learned approach on this data; it was not tuned to its own best possible performance.
 
 
@@ -258,6 +278,7 @@ Stated up front rather than discovered by the reviewer:
 | NumPy / Matplotlib       | 2.5.3 / 3.11.2                      |
 | Gradio                   | 6.28.0                              |
 | GPU                      | NVIDIA RTX 4060 Laptop, 8 GB, CUDA 12.7 driver |
+| CPU                      | Intel Core i7-13620H, 10 threads     |
 
 > Installation note: on Windows, the default PyPI wheel of PyTorch is **CPU-only**. The CUDA build has to be taken from the PyTorch wheel index for the matching CUDA version, otherwise `torch.cuda.is_available()` returns `False`. In this project the install had to be done manually (the network here could not reach the default wheel hosts) — worth budgeting time for.
 
@@ -325,6 +346,8 @@ Results land in `runs/detect/<name>/`: `weights/best.pt`, `results.csv` (per-epo
 ```bash
 yolo detect val model=runs/detect/yolov8n_baseline/weights/best.pt data=data/NEU-DET-yolo/data.yaml
 
+python tools/bench_latency.py     # the §4.6 latency / throughput table
+
 python app.py     # Gradio demo -> http://127.0.0.1:7860
 ```
 
@@ -343,6 +366,7 @@ defect-detection/
 ├── data/                  # dataset — git-ignored
 ├── runs/                  # training output — git-ignored
 ├── app.py                 # Gradio web demo
+├── LICENSE                # MIT
 └── requirements.txt
 ```
 
@@ -417,5 +441,5 @@ Reference solutions and helper scripts are **not** claimed as my own work; they 
 - [x] **Gradio demo** — `app.py`, upload → annotated image, per-class count, confidence slider (§4.5)
 - [x] **Demo screenshot** (§4.5)
 - [ ] **1–2 min screen recording** of the demo (§4.5)
-- [ ] Latency / model-size / accuracy trade-off table
+- [x] Latency / model-size / accuracy trade-off table (§4.6)
 - [ ] Optional: `onnx` export and a CPU inference benchmark
