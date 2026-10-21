@@ -225,7 +225,7 @@ A confidence sweep on `scratches_271.jpg` shows the threshold trade-off directly
 
 *Upload panel (left), confidence slider, and the annotated result (right): `crazing_271.jpg` from the held-out split, 3 boxes at 0.47 / 0.29 / 0.26 — the same numbers the CLI inference prints, confirming the web layer adds no behaviour of its own.*
 
-**Video walkthrough:** _link added once the recording is uploaded._
+**Video walkthrough (4 min):** [Steel Surface Defect Detection with YOLOv8 — Project Walkthrough](https://youtu.be/gTecYubChCE) — recorded walkthrough of the dataset audit, the three training runs, the failure-mode diagnosis and the live Gradio demo.
 
 ### 4.6 Deployment characteristics (measured)
 
@@ -440,6 +440,6 @@ Reference solutions and helper scripts are **not** claimed as my own work; they 
 - [x] **Prediction visualisations** on the held-out split (§4.4)
 - [x] **Gradio demo** — `app.py`, upload → annotated image, per-class count, confidence slider (§4.5)
 - [x] **Demo screenshot** (§4.5)
-- [ ] **1–2 min screen recording** of the demo (§4.5)
+- [x] **Screen recording** of the demo, ~4 min with chapters (§4.5)
 - [x] Latency / model-size / accuracy trade-off table (§4.6)
 - [ ] Optional: `onnx` export and a CPU inference benchmark
