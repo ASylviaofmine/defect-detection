@@ -396,6 +396,8 @@ git log --date=short --pretty=format:'%ad  %h  %s'
 | 10-17 → 10-18 | Gradio            | web demo + recorded demo video                                                                                   |
 | 10-19 → 10-22 | Packaging         | README completion, project summary, English statement-of-purpose material                                        |
 
+**In-depth reflections (Chinese, 中文):** [`docs/PROJECT_SUMMARY_zh.md`](docs/PROJECT_SUMMARY_zh.md) — the five turning points of the project, the three mistakes I made and the single habit behind all of them, and the five things I would change if I started over.
+
 ---
 
 ## 8. What I Implemented vs. AI-Assisted
